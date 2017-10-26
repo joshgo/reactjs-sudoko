@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import BoardViewModel from './BoardViewModel'
 import registerServiceWorker from './registerServiceWorker';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<BoardViewModel width="9" height="9" pixels="75" />, document.getElementById('root'));
 registerServiceWorker();
