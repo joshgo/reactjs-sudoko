@@ -23,6 +23,7 @@ class BoardViewModel extends Component {
 	}
 
 	render() {
+
 		var tiles = [];
 		for(var i = 0; i < this.width; i++) {
 			for(var j = 0; j < this.height; j++) {
@@ -32,6 +33,7 @@ class BoardViewModel extends Component {
 				var el = <TileViewModel 
 							row={j}
 							col={i}
+							screen={this.props.screen}
 							size={this.props.pixels}
 							color={'white'}
 							number={num == '0' ? ' ' : num}
