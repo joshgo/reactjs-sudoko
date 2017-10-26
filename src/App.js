@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import BoardViewModel from './BoardViewModel'
+import BoardModel from './BoardModel'
 
 class App extends Component {
   calculatePixels(){
-  	var min = Math.min(this.state.width, this.state.height);
+  	var min = Math.max(250, Math.min(this.state.width, this.state.height));
   	return min / 10;
   }
 
@@ -17,7 +18,8 @@ class App extends Component {
   }
 
   render() {
-  	var boardView = <BoardViewModel pixels={ this.calculatePixels() } screen={this.getScreen()}/>;
+  	var boardModel = new BoardModel();
+  	var boardView = <BoardViewModel model={boardModel} pixels={ this.calculatePixels() } screen={this.getScreen()}/>;
 
     return (
     	boardView
