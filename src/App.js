@@ -7,7 +7,6 @@ import BoardModel from './BoardModel'
 class App extends Component {
 	constructor(props) {
 		super(props);
-		this.state = { model : new BoardModel(9,9) };
 		console.log("app created");
 	}
 
@@ -24,7 +23,7 @@ class App extends Component {
   }
 
   render() {
-  	var boardView = <BoardViewModel model={this.state.model} pixels={this.calculatePixels()} screen={this.getScreen()} />;
+  	var boardView = <BoardViewModel pixels={this.calculatePixels()} screen={this.getScreen()} />;
 
     return (
     	boardView

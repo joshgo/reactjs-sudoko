@@ -83,6 +83,38 @@ class BoardModel {
 		return true;
 	}
 
+	getNextPosition(x, y, dir) {
+		// dir = r,l
+		var inc = 1;
+		if (dir == 'l' || dir == 'r') {
+			if(dir == 'l')
+				inc = -1;
+			else if (dir == 'r')
+				inc = 1;
+
+			for(var i = x+inc; 0 <= i && i < this.width; i += inc) {
+				if (!this.isConstant(i, y)) {
+					return {x:i, y:y};
+				}
+			}
+		}
+
+		if (dir == 'u' || dir == 'd') {
+			if(dir == 'u')
+				inc = -1;
+			else if (dir == 'd')
+				inc = 1;
+
+			for(var i = y+inc; 0 <= i && i < this.height; i += inc) {
+				if (!this.isConstant(x, i)) {
+					return {x:x, y:i};
+				}
+			}
+		}
+
+		return {x:x, y:y};
+	}
+
 	resetBoard() {
 		for (var i = 0; i < this.width; i++) {
 			for ( var j = 0; j < this.height; j++) {

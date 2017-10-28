@@ -4,12 +4,6 @@ import Controller from './Controller'
 class TileViewModel extends Component {
 	constructor(props) {
 		super(props);
-		this.state  = {
-			color : this.props.color, 
-			number: this.props.number,
-			focused: false
-		};
-
 		console.log('Tile created');
 	}
 
@@ -19,26 +13,14 @@ class TileViewModel extends Component {
 	}
 
 	onKeyPressListener = (msg) => {
-		if (msg === 'Escape') {
-			var num = this.props.model.getNumber(this.props.x, this.props.y);
-			this.setState({number : num});
-			return;
-		}
-
-		if (!this.state.focused)
+		if (!this.props.focused)
 			return;
 
 		if (typeof msg === 'number') {
-			if (!this.props.model.setNumber(this.props.x, this.props.y, msg))
-				return;
-			this.setState({number : msg});
-			if (this.props.model.isSolved()) {
-				Controller.SendNotification({type: Controller.SOLVED}, null);
-			}
+			this.props.numberChanged(this.props.x, this.props.y, msg);
 		}
 		else if (msg === 'Delete') {
-			this.props.model.setNumber(this.props.x, this.props.y, 0);
-			this.setState({number : 0});
+			this.props.numberChanged(this.props.x, this.props.y, 0);
 		}
 	}
 
@@ -47,23 +29,23 @@ class TileViewModel extends Component {
 			return;
 
 		if (sender !== this) { 
-			this.setState({focused : false});
+			this.props.setFocus(this.props.x, this.props.y);
 		}
 		else {
-			this.setState({focused : true});
+			this.props.setFocus(this.props.x, this.props.y);
 		}
 	}
 
 	onChangeColor = () => {
-		if (this.focused)
+		if (this.props.focused)
 			return;
-		Controller.SendNotification({type : Controller.CLICK}, this);
+		this.props.setFocus(this.props.x, this.props.y);
 	}
 
 	getColor() {
 		if (this.props.constant)
 			return 'salmon';
-		if (this.state.focused) {
+		if (this.props.focused) {
 			return 'gold';
 		} else {
 			return 'white';
@@ -91,13 +73,13 @@ class TileViewModel extends Component {
 
 		if (this.props.model.isConstant(this.props.x, this.props.y)) {
 			return (
-				<div style={style}>{this.state.number !== 0 ? this.state.number : ''}</div>
+				<div style={style}>{this.props.number !== 0 ? this.props.number : ''}</div>
 			);
 		}
 		else {
 			return (
 				<div style={style} onClick={this.onChangeColor}> 
-					{this.state.number !== 0 ? this.state.number : ''}
+					{this.props.number !== 0 ? this.props.number : ''}
 				</div>
 			);
 		}
