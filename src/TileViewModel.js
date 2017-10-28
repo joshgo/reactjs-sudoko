@@ -1,39 +1,9 @@
 import React, {Component} from 'react';
-import Controller from './Controller'
 
 class TileViewModel extends Component {
 	constructor(props) {
 		super(props);
 		console.log('Tile created');
-	}
-
-	componentDidMount() {
-		Controller.AddListener({type: Controller.KEYPRESS}, this.onKeyPressListener);
-		Controller.AddListener({type: Controller.CLICK}, this.onClickListener);
-	}
-
-	onKeyPressListener = (msg) => {
-		if (!this.props.focused)
-			return;
-
-		if (typeof msg === 'number') {
-			this.props.numberChanged(this.props.x, this.props.y, msg);
-		}
-		else if (msg === 'Delete') {
-			this.props.numberChanged(this.props.x, this.props.y, 0);
-		}
-	}
-
-	onClickListener = (sender) => {
-		if (this.props.model.isConstant(this.props.x, this.props.y))
-			return;
-
-		if (sender !== this) { 
-			this.props.setFocus(this.props.x, this.props.y);
-		}
-		else {
-			this.props.setFocus(this.props.x, this.props.y);
-		}
 	}
 
 	onChangeColor = () => {
@@ -83,8 +53,6 @@ class TileViewModel extends Component {
 				</div>
 			);
 		}
-
-
 	}
 }
 
