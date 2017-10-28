@@ -89,8 +89,6 @@ class BoardModel {
 		if (dir == 'l' || dir == 'r') {
 			if(dir == 'l')
 				inc = -1;
-			else if (dir == 'r')
-				inc = 1;
 
 			for(var i = x+inc; 0 <= i && i < this.width; i += inc) {
 				if (!this.isConstant(i, y)) {
@@ -102,8 +100,6 @@ class BoardModel {
 		if (dir == 'u' || dir == 'd') {
 			if(dir == 'u')
 				inc = -1;
-			else if (dir == 'd')
-				inc = 1;
 
 			for(var i = y+inc; 0 <= i && i < this.height; i += inc) {
 				if (!this.isConstant(x, i)) {
