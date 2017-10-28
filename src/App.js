@@ -2,10 +2,17 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import BoardViewModel from './BoardViewModel'
+import BoardModel from './BoardModel'
 
 class App extends Component {
+	constructor(props) {
+		super(props);
+		this.state = { model : new BoardModel(9,9) };
+		console.log("app created");
+	}
+
   calculatePixels(){
-  	var min = Math.min(this.state.width, this.state.height);
+  	var min = Math.max(250, Math.min(this.state.width, this.state.height));
   	return min / 10;
   }
 
@@ -17,7 +24,7 @@ class App extends Component {
   }
 
   render() {
-  	var boardView = <BoardViewModel pixels={ this.calculatePixels() } screen={this.getScreen()}/>;
+  	var boardView = <BoardViewModel model={this.state.model} pixels={this.calculatePixels()} screen={this.getScreen()} />;
 
     return (
     	boardView
@@ -25,7 +32,7 @@ class App extends Component {
   }
 
 	updateDimensions = () => {
-	    this.setState({width: window.innerWidth, height: window.innerHeight});
+		this.setState({width: window.innerWidth, height: window.innerHeight});
 	}
 
 	componentWillMount() {
