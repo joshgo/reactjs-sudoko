@@ -29,6 +29,12 @@ class BoardModel {
 				this.initialPuzzle[i].push(num);
 			}
 		}
+
+		// map/sets used for determining if puzzle has been solved.
+		this.ySets = new Map();
+		this.xSets = new Map();
+		this.groupSets = new Map();
+		this.resetBoard();
 	}
 	setNumber(x, y, n) {
 		if (this.initialPuzzle[x][y] !== 0)
@@ -51,7 +57,7 @@ class BoardModel {
 		// etc.
 		var x1 = Math.floor(x / 3);
 		var y1 = Math.floor(y / 3);
-		return y1 * 3 + x;
+		return y1 * 3 + x1;
 	}
 
 	isConstant(x, y) {
@@ -60,32 +66,48 @@ class BoardModel {
 	}
 
 	isSolved() {
-		var rset = new Set(); 		// check every row
-		var cset = new Set();		// check every col
+		this.ySets.clear();
+		this.xSets.clear();
+		this.groupSets.clear();
 
-		for (var i = 0; i < this.height; i++) {
-			for (var j = 0; j < this.width; j++) {
-				var rval = this.puzzle[i][j];
-				if (rval === 0 || rset.has(rval))
-					return false;
-				rset.add(rval);
-
-				var cval = this.puzzle[j][i];
-				if (cval === 0 || cset.has(cval))
-					return false;
-				cset.add(cval);
-			}
-			rset.clear();
-			cset.clear();
+		for (var i = 0; i < 9; i++) {
+			this.ySets.set(i, new Set());
+			this.xSets.set(i, new Set());
+			this.groupSets.set(i, new Set());
 		}
 
-		// checkevery group
+		for (var x = 0; x < this.width; x++) {
+			for ( var y = 0; y < this.height; y++) {
+				if (this.puzzle[x][y] !== 0)
+					this.xSets.get(x).add(this.puzzle[x][y]);					
+				if (this.puzzle[y][x] !== 0)
+					this.ySets.get(x).add(this.puzzle[y][x]);
+
+				var g = this.getGroup(x, y);
+				if (this.puzzle[x][y] !== 0)
+					this.groupSets.get(g).add(this.puzzle[x][y]);
+			}
+		}
+
+		for(var i = 0; i < this.width; i++) {
+			// check the rows
+			if (this.xSets.get(i).size !== 9)
+				return false;
+			// check the cols
+			if (this.ySets.get(i).size !== 9)
+				return false;
+			// check the groups
+			if (this.groupSets.get(i).size !== 9)
+				return false;
+		}
+
 		return true;
 	}
 
 	getNextPosition(x, y, dir) {
-		// dir = r,l
 		var inc = 1;
+
+		// move left or right
 		if (dir == 'l' || dir == 'r') {
 			if(dir == 'l')
 				inc = -1;
@@ -97,6 +119,7 @@ class BoardModel {
 			}
 		}
 
+		// move up or down
 		if (dir == 'u' || dir == 'd') {
 			if(dir == 'u')
 				inc = -1;
@@ -112,9 +135,13 @@ class BoardModel {
 	}
 
 	resetBoard() {
-		for (var i = 0; i < this.width; i++) {
-			for ( var j = 0; j < this.height; j++) {
-				this.puzzle[i][j] = this.initialPuzzle[i][j];
+		this.ySets.clear();
+		this.xSets.clear();
+		this.groupSets.clear();
+
+		for (var x = 0; x < this.width; x++) {
+			for ( var y = 0; y < this.height; y++) {
+				this.puzzle[x][y] = this.initialPuzzle[x][y];
 			}
 		}
 	}
