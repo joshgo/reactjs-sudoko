@@ -1,53 +1,75 @@
 import React, {Component} from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import TileViewModel from './TileViewModel';
-import BoardModel from './BoardModel'
+import BoardModel from './BoardModel';
+import ShortcutHelp from './ShortcutHelp';
+import SweetAlert from 'sweetalert-react';
+import SudokuGames from './SudokuGames';
+import 'sweetalert/dist/sweetalert.css';
 
 class BoardViewModel extends Component {
 	constructor(props) {
 		super(props);
-		this.state = { model : new BoardModel(9,9), 
-			focus : {x:-1, y:-1} };
+		this.state = this.getNewBoard();
+	}
+
+	getNewBoard() {
+		return { 
+			model : new BoardModel(SudokuGames.getRandomGame()), 
+			focus : {x:-1, y:-1},
+			alert : false,
+			solved : false
+		};
 	}
 
 	setFocus = (x, y) => {
 		this.setState({ focus : {x:x, y:y}});
 	}
 
-	onSolved = (o) => {
-		alert('Congratulations, you solved the puzzle!!!');
-	}
-
 	onKeyDown = (event) => {
 		var value = parseInt(event.key, 10);
-		if (!isNaN(value) && value != 0){
+		var isFocusedOnTile = this.state.focus.x != -1; 
+		if (isFocusedOnTile && !isNaN(value) && value != 0){
 			this.state.model.setNumber(this.state.focus.x, this.state.focus.y, value);
 			this.setState({model : this.state.model});		
-			if (this.state.model.isSolved())
-				this.onSolved();
+			if (this.state.model.isSolved()) {
+				this.state.solved = true;
+				this.setState({solved:true});
+			}
+			else {
+				this.state.solved = false;
+				this.setState({solved:false});
+			}
 		}
 		else if (event.key === "Escape") {
 			this.state.model.resetBoard();
 			this.setState({model : this.state.model});		
 		}
-		else if (event.key === "Delete" && this.state.focus.x > -1 && this.state.focus.y > -1) {
+		else if (event.key === "Delete" && isFocusedOnTile) {
 			this.state.model.setNumber(this.state.focus.x, this.state.focus.y, 0);
 			this.setState({model : this.state.model});		
 		}
-		else if (event.key === "ArrowRight") {
+		else if (event.key === "ArrowRight" && isFocusedOnTile) {
 			this.state.focus = this.state.model.getNextPosition(this.state.focus.x, this.state.focus.y, 'r');
 			this.setState({focus : this.state.focus});
 		}
-		else if (event.key === "ArrowLeft") {
+		else if (event.key === "ArrowLeft" && isFocusedOnTile) {
 			this.state.focus = this.state.model.getNextPosition(this.state.focus.x, this.state.focus.y, 'l');
 			this.setState({focus : this.state.focus});
 		}
-		else if (event.key === "ArrowUp") {
+		else if (event.key === "ArrowUp" && isFocusedOnTile) {
 			this.state.focus = this.state.model.getNextPosition(this.state.focus.x, this.state.focus.y, 'u');
 			this.setState({focus : this.state.focus});
 		}
-		else if (event.key === "ArrowDown") {
+		else if (event.key === "ArrowDown" && isFocusedOnTile) {
 			this.state.focus = this.state.model.getNextPosition(this.state.focus.x, this.state.focus.y, 'd');
 			this.setState({focus : this.state.focus});
+		}
+		else if (event.key === "?") {
+			this.setState({alert: true});
+		}
+		else if (event.key === "n" || event.key == "N") {
+			this.setState(this.getNewBoard());
 		}
 	}
 
@@ -61,8 +83,8 @@ class BoardViewModel extends Component {
 
 	render() {
 		var tiles = [];
-		for(var x = 0; x < this.state.model.width; x++) {
-			for(var y = 0; y < this.state.model.height; y++) {
+		for(var x = 0; x < this.state.model.size; x++) {
+			for(var y = 0; y < this.state.model.size; y++) {
 				var num = this.state.model.getNumber(x,y);
 				if(x == 0 && y == 0)
 					console.log(num);
@@ -80,9 +102,30 @@ class BoardViewModel extends Component {
 							setFocus={this.setFocus}
 							/>;
 				tiles.push(el);
+
+				var val = renderToStaticMarkup(<ShortcutHelp />);
+
+				tiles.push(
+					<SweetAlert
+					show={this.state.alert}
+					title="Help / Shortcuts"
+					html
+					text={val}
+					onConfirm={() => this.setState({alert:false})}
+				  >
+				  </SweetAlert>
+				);
+
+				tiles.push (
+					<SweetAlert
+					show={this.state.solved}
+					title="Congratulations! You solved the puzzle!"
+					text="Click ok to generate a new game"
+					onConfirm={() => this.setState(this.getNewBoard())}
+				  	></SweetAlert>
+				);
 			}
 		}
-
 		return (tiles);
 	};
 }
