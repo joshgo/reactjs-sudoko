@@ -27,42 +27,45 @@ class BoardViewModel extends Component {
 	}
 
 	onKeyDown = (event) => {
-		var value = parseInt(event.key, 10);
-		var isFocusedOnTile = this.state.focus.x != -1; 
-		if (isFocusedOnTile && !isNaN(value) && value != 0){
-			this.state.model.setNumber(this.state.focus.x, this.state.focus.y, value);
-			var solved = this.state.model.isSolved();
-			this.setState({model : this.state.model, solved});
-		}
-		else if (event.key === "Escape") {
+		if (event.key === "Escape") {
 			this.state.model.resetBoard();
 			this.setState({model : this.state.model});		
-		}
-		else if (event.key === "Delete" && isFocusedOnTile) {
-			this.state.model.setNumber(this.state.focus.x, this.state.focus.y, 0);
-			this.setState({model : this.state.model});		
-		}
-		else if (event.key === "ArrowRight" && isFocusedOnTile) {
-			this.state.focus = this.state.model.getNextPosition(this.state.focus.x, this.state.focus.y, 'r');
-			this.setState({focus : this.state.focus});
-		}
-		else if (event.key === "ArrowLeft" && isFocusedOnTile) {
-			this.state.focus = this.state.model.getNextPosition(this.state.focus.x, this.state.focus.y, 'l');
-			this.setState({focus : this.state.focus});
-		}
-		else if (event.key === "ArrowUp" && isFocusedOnTile) {
-			this.state.focus = this.state.model.getNextPosition(this.state.focus.x, this.state.focus.y, 'u');
-			this.setState({focus : this.state.focus});
-		}
-		else if (event.key === "ArrowDown" && isFocusedOnTile) {
-			this.state.focus = this.state.model.getNextPosition(this.state.focus.x, this.state.focus.y, 'd');
-			this.setState({focus : this.state.focus});
 		}
 		else if (event.key === "?") {
 			this.setState({alert: true});
 		}
 		else if (event.key === "n" || event.key == "N") {
 			this.setState(this.getNewBoard());
+		}
+
+		var isFocusedOnTile = this.state.focus.x != -1; 
+		if (!isFocusedOnTile) return;
+
+		var value = parseInt(event.key, 10);		
+		if (!isNaN(value) && value != 0){
+			this.state.model.setNumber(this.state.focus.x, this.state.focus.y, value);
+			var solved = this.state.model.isSolved();
+			this.setState({model : this.state.model, solved});
+		}
+		else if (event.key === "Delete") {
+			this.state.model.setNumber(this.state.focus.x, this.state.focus.y, 0);
+			this.setState({model : this.state.model});		
+		}
+		else if (event.key === "Right" || event.key === "ArrowRight") {
+			this.state.focus = this.state.model.getNextPosition(this.state.focus.x, this.state.focus.y, 'r');
+			this.setState({focus : this.state.focus});
+		}
+		else if (event.key === "Left" || event.key === "ArrowLeft") {
+			this.state.focus = this.state.model.getNextPosition(this.state.focus.x, this.state.focus.y, 'l');
+			this.setState({focus : this.state.focus});
+		}
+		else if (event.key === "Up" || event.key === "ArrowUp") {
+			this.state.focus = this.state.model.getNextPosition(this.state.focus.x, this.state.focus.y, 'u');
+			this.setState({focus : this.state.focus});
+		}
+		else if (event.key === "Down" || event.key === "ArrowDown") {
+			this.state.focus = this.state.model.getNextPosition(this.state.focus.x, this.state.focus.y, 'd');
+			this.setState({focus : this.state.focus});
 		}
 	}
 
@@ -79,8 +82,6 @@ class BoardViewModel extends Component {
 		for(var x = 0; x < this.state.model.size; x++) {
 			for(var y = 0; y < this.state.model.size; y++) {
 				var num = this.state.model.getNumber(x,y);
-				if(x == 0 && y == 0)
-					console.log(num);
 				var constant = this.state.model.isConstant(x,y);
 
 				var el = <TileViewModel 
