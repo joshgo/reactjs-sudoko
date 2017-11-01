@@ -31,15 +31,8 @@ class BoardViewModel extends Component {
 		var isFocusedOnTile = this.state.focus.x != -1; 
 		if (isFocusedOnTile && !isNaN(value) && value != 0){
 			this.state.model.setNumber(this.state.focus.x, this.state.focus.y, value);
-			this.setState({model : this.state.model});		
-			if (this.state.model.isSolved()) {
-				this.state.solved = true;
-				this.setState({solved:true});
-			}
-			else {
-				this.state.solved = false;
-				this.setState({solved:false});
-			}
+			var solved = this.state.model.isSolved();
+			this.setState({model : this.state.model, solved});
 		}
 		else if (event.key === "Escape") {
 			this.state.model.resetBoard();
