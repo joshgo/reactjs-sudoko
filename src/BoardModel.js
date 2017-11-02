@@ -51,7 +51,7 @@ class BoardModel {
 	}
 
 	isConstant(x, y) {
-		var flag = this.initialPuzzle[x][y] != 0;
+		var flag = this.initialPuzzle[x][y] !== 0;
 		return flag;
 	}
 

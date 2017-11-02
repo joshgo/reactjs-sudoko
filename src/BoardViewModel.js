@@ -27,9 +27,10 @@ class BoardViewModel extends Component {
 	}
 
 	onKeyDown = (event) => {
+		var model = this.state.model;
 		if (event.key === "Escape") {
-			this.state.model.resetBoard();
-			this.setState({model : this.state.model});		
+			model.resetBoard();
+			this.setState({model : model});		
 		}
 		else if (event.key === "?") {
 			this.setState({alert: true});
@@ -41,31 +42,33 @@ class BoardViewModel extends Component {
 		var isFocusedOnTile = this.state.focus.x !== -1; 
 		if (!isFocusedOnTile) return;
 
-		var value = parseInt(event.key, 10);		
+		var value = parseInt(event.key, 10);
+		var direction = '';		
 		if (!isNaN(value) && value !== 0){
-			this.state.model.setNumber(this.state.focus.x, this.state.focus.y, value);
-			var solved = this.state.model.isSolved();
-			this.setState({model : this.state.model, solved: solved});
+			model.setNumber(this.state.focus.x, this.state.focus.y, value);
+			var solved = model.isSolved();
+			this.setState({model : model, solved: solved});
 		}
 		else if (event.key === "Delete") {
-			this.state.model.setNumber(this.state.focus.x, this.state.focus.y, 0);
-			this.setState({model : this.state.model});		
+			model.setNumber(this.state.focus.x, this.state.focus.y, 0);
+			this.setState({model : model});		
 		}
 		else if (event.key === "Right" || event.key === "ArrowRight") {
-			this.state.focus = this.state.model.getNextPosition(this.state.focus.x, this.state.focus.y, 'r');
-			this.setState({focus : this.state.focus});
+			direction = 'r';
 		}
 		else if (event.key === "Left" || event.key === "ArrowLeft") {
-			this.state.focus = this.state.model.getNextPosition(this.state.focus.x, this.state.focus.y, 'l');
-			this.setState({focus : this.state.focus});
+			direction = 'l';
 		}
 		else if (event.key === "Up" || event.key === "ArrowUp") {
-			this.state.focus = this.state.model.getNextPosition(this.state.focus.x, this.state.focus.y, 'u');
-			this.setState({focus : this.state.focus});
+			direction = 'u';
 		}
 		else if (event.key === "Down" || event.key === "ArrowDown") {
-			this.state.focus = this.state.model.getNextPosition(this.state.focus.x, this.state.focus.y, 'd');
-			this.setState({focus : this.state.focus});
+			direction = 'd';
+		}
+
+		if (direction !== '') {
+			var focus = this.state.model.getNextPosition(this.state.focus.x, this.state.focus.y, direction);
+			this.setState({focus : focus});
 		}
 	}
 
