@@ -45,7 +45,7 @@ class BoardViewModel extends Component {
 		if (!isNaN(value) && value !== 0){
 			this.state.model.setNumber(this.state.focus.x, this.state.focus.y, value);
 			var solved = this.state.model.isSolved();
-			this.setState({model : this.state.model, solved});
+			this.setState({model : this.state.model, solved: solved});
 		}
 		else if (event.key === "Delete") {
 			this.state.model.setNumber(this.state.focus.x, this.state.focus.y, 0);
