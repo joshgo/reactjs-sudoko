@@ -34,15 +34,15 @@ class BoardViewModel extends Component {
 		else if (event.key === "?") {
 			this.setState({alert: true});
 		}
-		else if (event.key === "n" || event.key == "N") {
+		else if (event.key === "n" || event.key === "N") {
 			this.setState(this.getNewBoard());
 		}
 
-		var isFocusedOnTile = this.state.focus.x != -1; 
+		var isFocusedOnTile = this.state.focus.x !== -1; 
 		if (!isFocusedOnTile) return;
 
 		var value = parseInt(event.key, 10);		
-		if (!isNaN(value) && value != 0){
+		if (!isNaN(value) && value !== 0){
 			this.state.model.setNumber(this.state.focus.x, this.state.focus.y, value);
 			var solved = this.state.model.isSolved();
 			this.setState({model : this.state.model, solved});
@@ -87,7 +87,7 @@ class BoardViewModel extends Component {
 				var el = <TileViewModel 
 							model={this.state.model}
 							x={x} y={y}
-							focused = { x == this.state.focus.x && y == this.state.focus.y }
+							focused = { x === this.state.focus.x && y === this.state.focus.y }
 							screen={this.props.screen}
 							size={this.props.pixels}
 							number={num === 0 ? '' : num}

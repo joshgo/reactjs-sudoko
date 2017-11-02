@@ -98,8 +98,8 @@ class BoardModel {
 		var inc = 1;
 
 		// move left or right
-		if (dir == 'l' || dir == 'r') {
-			if(dir == 'l')
+		if (dir === 'l' || dir === 'r') {
+			if(dir === 'l')
 				inc = -1;
 
 			for(var i = x+inc; 0 <= i && i < this.size; i += inc) {
@@ -110,8 +110,8 @@ class BoardModel {
 		}
 
 		// move up or down
-		if (dir == 'u' || dir == 'd') {
-			if(dir == 'u')
+		if (dir === 'u' || dir === 'd') {
+			if(dir === 'u')
 				inc = -1;
 
 			for(var i = y+inc; 0 <= i && i < this.size; i += inc) {
