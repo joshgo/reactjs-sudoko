@@ -4,7 +4,10 @@ The purpose of this project is to learn React. I'm doing so by making a Sudoko g
 
 -josh
 
-## To play:
+## Play:
+* Demo: https://sudoku.glitch.me
+
+Or download the source code, and run NPM.
 * Clone the repo
 * In the repo directory, run the following npm commands:
   * npm install 
