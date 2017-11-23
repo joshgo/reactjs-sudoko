@@ -81,7 +81,28 @@ class BoardViewModel extends Component {
 	}
 
 	render() {
-		var tiles = [];
+		var elements = [];
+		var val = renderToStaticMarkup(<ShortcutHelp />);
+
+		elements.push(
+			<SweetAlert
+			show={this.state.alert}
+			title="Help / Shortcuts"
+			html
+			text={val}
+			onConfirm={() => this.setState({alert:false})}
+			/>
+		);
+
+		elements.push (
+			<SweetAlert
+			show={this.state.solved}
+			title="Congratulations! You solved the puzzle!"
+			text="Click ok to generate a new game"
+			onConfirm={() => this.setState(this.getNewBoard())}
+			/>
+		);
+
 		for(var x = 0; x < this.state.model.size; x++) {
 			for(var y = 0; y < this.state.model.size; y++) {
 				var num = this.state.model.getNumber(x,y);
@@ -98,32 +119,10 @@ class BoardViewModel extends Component {
 							numberChanged={this.numberChanged}
 							setFocus={this.setFocus}
 							/>;
-				tiles.push(el);
-
-				var val = renderToStaticMarkup(<ShortcutHelp />);
-
-				tiles.push(
-					<SweetAlert
-					show={this.state.alert}
-					title="Help / Shortcuts"
-					html
-					text={val}
-					onConfirm={() => this.setState({alert:false})}
-				  >
-				  </SweetAlert>
-				);
-
-				tiles.push (
-					<SweetAlert
-					show={this.state.solved}
-					title="Congratulations! You solved the puzzle!"
-					text="Click ok to generate a new game"
-					onConfirm={() => this.setState(this.getNewBoard())}
-				  	></SweetAlert>
-				);
+				elements.push(el);
 			}
 		}
-		return (tiles);
+		return (elements);
 	};
 }
 
