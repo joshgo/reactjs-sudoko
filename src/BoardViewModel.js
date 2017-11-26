@@ -6,6 +6,7 @@ import ShortcutHelp from './ShortcutHelp';
 import SweetAlert from 'sweetalert-react';
 import SudokuGames from './SudokuGames';
 import 'sweetalert/dist/sweetalert.css';
+import Confetti from 'react-confetti';
 
 class BoardViewModel extends Component {
 	constructor(props) {
@@ -102,6 +103,12 @@ class BoardViewModel extends Component {
 			onConfirm={() => this.setState(this.getNewBoard())}
 			/>
 		);
+
+		if (this.state.solved) {
+			elements.push(
+				<Confetti width={this.props.screen.width} height={this.props.screen.height} />
+			);
+		}
 
 		for(var x = 0; x < this.state.model.size; x++) {
 			for(var y = 0; y < this.state.model.size; y++) {
